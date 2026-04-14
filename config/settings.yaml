@@ -1,0 +1,32 @@
+# 全局配置
+
+# Appium Server
+appium:
+  host: 127.0.0.1
+  port: 4723
+  timeout: 30
+
+# 测试配置
+test:
+  default_timeout: 10
+  implicit_wait: 0
+  screenshot_on_fail: true
+  video_on_fail: false
+  max_retry: 1
+
+# 日志配置
+log:
+  level: INFO
+  format: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {module}:{line} | {message}"
+  rotation: "100 MB"
+  retention: "7 days"
+
+# 报告配置
+report:
+  title: "App 自动化测试报告"
+  description: "基于 Appium + pytest 的自动化测试"
+
+# 通知配置
+notify:
+  enabled: false
+  platform: "wechat"  # wechat / dingtalk

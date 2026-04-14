@@ -1,0 +1,23 @@
+# 设备配置列表
+
+# iOS 设备
+ios_devices:
+  - name: "iPhone 15"
+    platformVersion: "17.0"
+    udid: "auto"
+    type: "simulator"
+  - name: "iPhone 14 Pro"
+    platformVersion: "16.4"
+    udid: "auto"
+    type: "simulator"
+
+# Android 设备
+android_devices:
+  - name: "Pixel 8"
+    platformVersion: "14"
+    udid: "emulator-5554"
+    type: "emulator"
+  - name: "Samsung S23"
+    platformVersion: "13"
+    udid: "RF8N10ABCDE"
+    type: "real"

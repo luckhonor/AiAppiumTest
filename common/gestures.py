@@ -3,8 +3,6 @@
 支持滑动、长按、拖动、缩放等操作
 """
 from appium.webdriver.webdriver import WebDriver
-from appium.webdriver.common.touch_actions import TouchAction
-from appium.webdriver.common.multi_action import MultiAction
 from typing import Tuple, Optional
 import logging
 
@@ -132,14 +130,12 @@ class Gestures:
     def long_press(self, locator: tuple, duration: int = 2000):
         """长按元素"""
         x, y = self._get_element_center(locator)
-        action = TouchAction(self.driver)
-        action.long_press(x=x, y=y, duration=duration).release().perform()
+        self.driver.long_press(x=x, y=y, duration=duration)
         logger.debug(f"长按元素：({x}, {y}), 时长：{duration}ms")
 
     def long_press_by_coord(self, x: int, y: int, duration: int = 2000):
         """按坐标长按"""
-        action = TouchAction(self.driver)
-        action.long_press(x=x, y=y, duration=duration).release().perform()
+        self.driver.long_press(x=x, y=y, duration=duration)
         logger.debug(f"长按坐标：({x}, {y}), 时长：{duration}ms")
 
     # ========== 点击操作 ==========
@@ -147,21 +143,18 @@ class Gestures:
     def tap(self, locator: tuple):
         """点击元素"""
         x, y = self._get_element_center(locator)
-        action = TouchAction(self.driver)
-        action.tap(x=x, y=y).perform()
+        self.driver.tap(x=x, y=y)
         logger.debug(f"点击元素：({x}, {y})")
 
     def tap_by_coord(self, x: int, y: int):
         """按坐标点击"""
-        action = TouchAction(self.driver)
-        action.tap(x=x, y=y).perform()
+        self.driver.tap(x=x, y=y)
         logger.debug(f"点击坐标：({x}, {y})")
 
     def double_tap(self, locator: tuple):
         """双击元素"""
         x, y = self._get_element_center(locator)
-        action = TouchAction(self.driver)
-        action.tap(x=x, y=y, count=2).perform()
+        self.driver.tap(x=x, y=y, count=2)
         logger.debug(f"双击元素：({x}, {y})")
 
     # ========== 拖动操作 ==========
@@ -170,10 +163,7 @@ class Gestures:
         """拖动元素"""
         from_x, from_y = self._get_element_center(from_locator)
         to_x, to_y = self._get_element_center(to_locator)
-
-        action = TouchAction(self.driver)
-        action.long_press(x=from_x, y=from_y, duration=duration)
-        action.move(x=to_x, y=to_y).release().perform()
+        self.driver.drag_and_drop(from_x, from_y, to_x, to_y, duration)
         logger.debug(f"拖动：({from_x}, {from_y}) -> ({to_x}, {to_y})")
 
     # ========== 缩放操作 ==========
@@ -187,17 +177,8 @@ class Gestures:
         offset_x = int(width * zoom_percent / 2)
         offset_y = int(height * zoom_percent / 2)
 
-        # 双指从中心向外展开
-        multi_action = MultiAction(self.driver)
-
-        action1 = TouchAction(self.driver)
-        action1.long_press(x=cx - offset_x, y=cy - offset_y).move(x=cx + offset_x, y=cy + offset_y)
-
-        action2 = TouchAction(self.driver)
-        action2.long_press(x=cx + offset_x, y=cy + offset_y).move(x=cx - offset_x, y=cy - offset_y)
-
-        multi_action.add(action1, action2)
-        multi_action.perform()
+        # 使用 driver 的 zoom 方法
+        self.driver.zoom(center_x=cx, center_y=cy, zoom_percent=zoom_percent)
         logger.debug("执行放大手势")
 
     def zoom_out(self, center_x: Optional[int] = None, center_y: Optional[int] = None, zoom_percent: float = 0.5):
@@ -209,17 +190,7 @@ class Gestures:
         offset_x = int(width * zoom_percent / 2)
         offset_y = int(height * zoom_percent / 2)
 
-        # 双指从外向内合拢
-        multi_action = MultiAction(self.driver)
-
-        action1 = TouchAction(self.driver)
-        action1.long_press(x=cx - offset_x, y=cy - offset_y).move(x=cx + offset_x, y=cy + offset_y)
-
-        action2 = TouchAction(self.driver)
-        action2.long_press(x=cx + offset_x, y=cy + offset_y).move(x=cx - offset_x, y=cy - offset_y)
-
-        multi_action.add(action1, action2)
-        multi_action.perform()
+        self.driver.pinch(center_x=cx, center_y=cy, zoom_percent=zoom_percent)
         logger.debug("执行缩小手势")
 
     # ========== 滚动操作 ==========

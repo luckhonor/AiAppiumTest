@@ -3,11 +3,16 @@ Pytest 配置和 Fixture 管理
 """
 import pytest
 import os
+import sys
 import logging
 from pathlib import Path
+from datetime import datetime
+
+# 添加项目根目录到路径
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from utils.driver_factory import DriverFactory
 from utils.logger import setup_logger, get_logger
-from datetime import datetime
 
 # 初始化日志
 setup_logger()

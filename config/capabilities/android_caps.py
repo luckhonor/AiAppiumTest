@@ -1,57 +1,44 @@
 """
 Android Desired Capabilities 配置
+使用 UiAutomator2Options 适配 Appium Python Client v3+
 """
+from appium.options.android import UiAutomator2Options
 
 
-def get_android_caps(app_path: str = None, device_udid: str = "emulator-5554") -> dict:
+# 用户提供的设备配置
+USER_CAPS = {
+    "platformName": "Android",
+    "appium:platformVersion": "12",
+    "appium:deviceName": "192.168.3.9:5555",
+    "appium:appPackage": "in.dradhanus.liveher",
+    "appium:appActivity": "in.dradhanus.liveher.SplashActivity",
+    "appium:automationName": "UIAutomator2",
+}
+
+
+def get_android_caps(app_path: str = None,
+                     device_udid: str = None,
+                     no_reset: bool = False,
+                     full_reset: bool = False) -> UiAutomator2Options:
     """
-    获取 Android 设备配置
-
-    Args:
-        app_path: .apk 文件路径
-        device_udid: 设备 UDID
-
-    Returns:
-        Android capabilities 字典
+    获取 Android 设备配置（返回 UiAutomator2Options 对象）
     """
-    caps = {
-        "platformName": "Android",
-        "platformVersion": "14",
-        "deviceName": "Pixel 8",
-        "automationName": "UiAutomator2",
-        "udid": device_udid,
+    options = UiAutomator2Options()
+    options.platform_name = "Android"
+    options.platform_version = "12"
+    options.device_name = device_udid or "192.168.3.9:5555"
+    options.app_package = "in.dradhanus.liveher"
+    options.app_activity = "in.dradhanus.liveher.SplashActivity"
+    options.automation_name = "UIAutomator2"
 
-        # App 配置
-        "app": app_path,
-        # "appPackage": "com.example",
-        # "appActivity": ".MainActivity",
+    if app_path:
+        options.app = app_path
 
-        # 性能优化
-        "newCommandTimeout": 300,
-        "waitForIdleTimeout": 10,
-        "waitForSelectorTimeout": 5000,
+    options.no_reset = no_reset
+    options.full_reset = full_reset
 
-        # 元素定位优化
-        "allowInvisibleElements": False,
-        "ignoreUnimportantViews": True,
+    # 性能优化
+    options.new_command_timeout = 300
+    options.auto_accept_alerts = True
 
-        # UiAutomator2 特有配置
-        "disableWindowAnimation": True,
-        "skipUnlock": False,
-        "unlockStrategy": "swipe",
-
-        # 截图配置
-        "nativeWebScreenshot": False,
-    }
-
-    return caps
-
-
-def get_android_web_caps(device_udid: str = "emulator-5554") -> dict:
-    """获取 Android Chrome Web 配置"""
-    caps = get_android_caps(device_udid=device_udid)
-    caps.pop("app", None)
-    caps.pop("appPackage", None)
-    caps.pop("appActivity", None)
-    caps["browserName"] = "Chrome"
-    return caps
+    return options

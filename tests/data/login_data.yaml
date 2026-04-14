@@ -1,0 +1,68 @@
+# 手机号登录测试数据配置
+
+valid_accounts:
+  min_phone: "1000000001"
+  max_phone: "1000000999"
+  password: "test11"
+  sample_phones:
+    - "1000000001"
+    - "1000000005"
+    - "1000000050"
+    - "1000000950"
+    - "1000000999"
+
+invalid_phones_format:
+  - phone: "abcdefghij"
+    desc: "纯字母"
+  - phone: "12345abcde"
+    desc: "数字字母混合"
+  - phone: "100000000!"
+    desc: "包含特殊字符"
+  - phone: "1000000001a"
+    desc: "数字+字母"
+
+invalid_phones_length:
+  - phone: "10000000"
+    desc: "8位不足"
+  - phone: "100000000"
+    desc: "9位不足"
+  - phone: "10000000010"
+    desc: "11位过多"
+  - phone: "1"
+    desc: "1位极短"
+
+wrong_passwords:
+  - password: "test12"
+    desc: "相近密码"
+  - password: "test"
+    desc: "短密码"
+  - password: "wrongpassword"
+    desc: "完全错误"
+  - password: "TEST11"
+    desc: "大写密码"
+  - password: ""
+    desc: "空密码"
+
+non_exist_phones:
+  - phone: "1000000000"
+    desc: "边界外小"
+  - phone: "1000001000"
+    desc: "边界外大"
+  - phone: "9999999999"
+    desc: "完全不在范围"
+  - phone: "0000000001"
+    desc: "不同开头"
+
+boundary_test:
+  - phone: "1000000000"
+    expected: false
+    desc: "边界外-小于最小值"
+  - phone: "1000000001"
+    expected: true
+    desc: "边界内-最小值"
+  - phone: "1000000999"
+    expected: true
+    desc: "边界内-最大值"
+  - phone: "1000001000"
+    expected: false
+    desc: "边界外-大于最大值"
